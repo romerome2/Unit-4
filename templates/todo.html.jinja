@@ -7,16 +7,16 @@
 <body>
 <style>
 body {
-    background-color: rgb(146, 122, 87);
-    color: azure;
+    background-color: rgb(45, 32, 159);
+    color: rgb(42, 192, 192);
 
 }
 </style>
 <h1> Thee todo</h1>
 {% for x in todo%}
 
-    <ul>{{x}}</ul>
-    <form method="POST" action="/delete_todo/{{loop.index0}}">
+    <ul>{{x['description']}}</ul>
+    <form method="POST" action="/delete_todo/{{x['id']}}">
     <input type = "submit" value="Delete">
     </form>
 {%endfor%}
