@@ -1,8 +1,13 @@
 from flask import Flask, render_template, request,redirect
+import pymysql
 import pymysql.cursors
 from pprint import pprint as print
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
 
 conn = pymysql.connect(
     database="jspooner_todos" ,
@@ -12,9 +17,20 @@ conn = pymysql.connect(
     cursorclass=pymysql.cursors.DictCursor,
 )
 
+user = {
+     "rome": generate_password_hash("hello"),
+    "susan": generate_password_hash("bye")
+}
+
+@auth.verify_password
+def verify_password(username, password):
+    if username in user and \
+            check_password_hash(user.get(username), password):
+        return username
 
 
 @app.route('/', methods=['GET', 'POST'])
+@auth.login_required
 def index():
     if request.method == 'POST':
         new_todo = request.form["todo"]
